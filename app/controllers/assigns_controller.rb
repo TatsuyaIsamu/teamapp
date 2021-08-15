@@ -15,6 +15,13 @@ class AssignsController < ApplicationController
   end
 
   def destroy
+    # binding.irb
+
+    unless current_user.id == Assign.find(params[:id]).user.id || current_user == Team.friendly.find(params[:team_id]).owner
+      # binding.irb
+      redirect_to team_path(params[:team_id]) and return
+    end
+
     assign = Assign.find(params[:id])
     destroy_message = assign_destroy(assign, assign.user)
 
