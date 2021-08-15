@@ -51,6 +51,7 @@ class TeamsController < ApplicationController
     # binding.irb
     @team.owner = User.find(params[:user_id])
     # binding.irb
+    ChangeTeamOwnerMailer.change_team_owner(@team.owner.email, @team.owner.password).deliver
     @team.save
     redirect_to team_path(@team.id)
     
