@@ -1,6 +1,6 @@
 class TeamsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_team, only: %i[show edit update destroy]
+  before_action :set_team, only: %i[show edit update destroy change]
 
   def index
     @teams = Team.all
@@ -48,6 +48,16 @@ class TeamsController < ApplicationController
 
   def dashboard
     @team = current_user.keep_team_id ? Team.find(current_user.keep_team_id) : current_user.teams.first
+  end
+
+  def change
+    # binding.irb
+    @team.owner = User.find(params[:user_id])
+    # binding.irb
+    ChangeTeamOwnerMailer.change_team_owner(@team.owner.email, @team.owner.password).deliver
+    @team.save
+    redirect_to team_path(@team.id)
+    
   end
 
   private
